@@ -91,3 +91,39 @@ skillTags.forEach(tag => {
         tag.style.backgroundColor = '';
     });
 });
+
+
+function smoothScroll(target, offset = 0) {
+    const element = document.querySelector(target);
+    if (element) {
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        window.scrollTo({
+            top: elementPosition - offset,
+            behavior: 'smooth'
+        });
+    }
+}
+
+function debounce(func, wait = 100) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = this.getAttribute('href');
+        if (target !== '#') {
+            smoothScroll(target, 80);
+        }
+    });
+});
+
+window.addEventListener('scroll', debounce(animateOnScroll, 20));
